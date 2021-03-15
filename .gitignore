@@ -1,0 +1,8 @@
+.DS_Store
+*.swp
+
+tmp
+.venv
+out
+overwritten.log
+check_differences.csv
