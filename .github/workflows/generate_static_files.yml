@@ -30,8 +30,9 @@ jobs:
           python transform.py ./raw_data
 
       - name: Deploy generated files
-        uses: JamesIves/github-pages-deploy-action@4.1.0
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: gh-pages
-          folder: out
-          single-commit: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: out
+          force_orphan: true
