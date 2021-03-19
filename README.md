@@ -11,13 +11,14 @@
 1. GitHub から新しいレポジトリーを作ります
 	1. Repository template にこのレポジトリーを選択してください（ `agro-env/meteo-template` ）
 	2. Owner は `agro-env` を設定し、 Repository name は `meteo-YYYY` に設定します（ `YYYY` に4桁の西暦年を置き換えてください）
+	3. 公開設定は `Public` に設定し、 `Include all branches` にチェックが入ってることを確認してください。
 2. 新しく作られたレポジトリーに元データをアップロードします
 	1. `meteo-YYYY` をパソコンに clone します。（ `git clone git@github.com:agro-env/meteo-YYYY` )
 	2. `raw_data` のディレクトリにテンプレートのように、 `pr` `sd` `sr` ... などのディレクトリをコピーしてください。（テンプレートに入ってる既存の空ディレクトリーを上書きしてください）
 	3. コミットし、レポジトリーにプッシュします。（ `git add . && git commit -m "Add data for year YYYY" && git push` ）
 3. GitHub Actions の様子を見る
 	1. GitHub のページ上の "Actions" というタブをクリックすると "All workflows" に処理中プロセスが見れます
-4. GitHub Pages を公開する
+4. GitHub Pages を公開する（ステップ1で `Include all branches` にチェックが入ってる場合、下記を手順は不要です）
 	1. 処理が完了した後、 "Settings" のタブをクリックします。
 	2. ページ下部にスクロールし（ "GitHub Pages" のセクションまで）、Source のブランチを `gh-pages` に設定します。ディレクトリは `/ (root)` に設定します。
 	3. "Save" ボタンを押します。
@@ -79,6 +80,12 @@ python transform.py -k 0A,12,36 ../data/2000
 ```
 
 の様にカンマ区切りで指定できます。
+
+並列処理を無効化する場合は `-p` を使用して並列処理のプロセス数を1に設定してください。
+
+```
+python transform.py -p 1 ../data/2000
+```
 
 ## 注意点
 

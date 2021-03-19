@@ -51,7 +51,7 @@ def compare_data(outroot, mesh, component, area, data):
   if component in ["tm", "tx", "tn"]:
     d = np.where(d > 500, d - 1000, d)
 
-  if component in ["tm", "tx", "tn", "sr"]:
+  if component in ["tm", "tx", "tn", "sr", "sd"]:
     d = d / 10
 
   differences = []

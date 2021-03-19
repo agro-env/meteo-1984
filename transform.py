@@ -111,7 +111,7 @@ def _merge_components(cmd, meshcode, dummy):
     cmd["tn"].get(meshcode, dummy) / 10,
     cmd["pr"].get(meshcode, dummy),
     cmd["sr"].get(meshcode, dummy) / 10,
-    cmd["sd"].get(meshcode, dummy),
+    cmd["sd"].get(meshcode, dummy) / 10,
   ])
   return merged.transpose()
 
@@ -166,8 +166,9 @@ def _process_ken_code_files(input):
 
 @click.command()
 @click.option("-k", "--only-ken-code", default=None)
+@click.option("-p", "--processes", default=int(os.cpu_count() * 0.75))
 @click.argument("src")
-def main(src, only_ken_code):
+def main(src, only_ken_code, processes):
   """SRC に解凍された1年分のディレクトリーを指定してください。
   """
 
@@ -193,13 +194,19 @@ def main(src, only_ken_code):
 
   os.makedirs(os.path.join(".", "out"), exist_ok=True)
 
-  processes = int(os.cpu_count() * 0.75)
-  if os.cpu_count() == 2:
+  ken_keys = sorted(grouped_by_ken.keys())
+  ken_items = [ (x, grouped_by_ken[x]) for x in ken_keys ]
+
+  # Lock processes to 2 when running in GitHub Actions
+  if os.getenv("CI") == "true" and os.cpu_count() == 2:
     processes = 2
   print(f"Using {processes} processes...", flush=True)
 
   with open(os.path.join(".", "overwritten.log"), "w", encoding="utf-8") as f, mp.Pool(processes=processes) as pool:
-    for (kc, existing_files,) in tqdm(pool.imap_unordered(_process_ken_code_files, grouped_by_ken.items()), total=len(grouped_by_ken)):
+    process_method = pool.imap_unordered
+    if processes == 1:
+      process_method = map
+    for (kc, existing_files,) in tqdm(process_method(_process_ken_code_files, ken_items), total=len(grouped_by_ken)):
       tqdm.write(f"Ken code : {kc} finished")
 
       f.write(f"[{kc}] 下記のメッシュコードがすでに存在しているためスキップしました:\n")

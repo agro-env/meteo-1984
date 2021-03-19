@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "raw_data/**"
+      - "transform.py"
 
   workflow_dispatch:
 
@@ -33,3 +34,4 @@ jobs:
         with:
           branch: gh-pages
           folder: out
+          single-commit: true
