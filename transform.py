@@ -120,7 +120,7 @@ def _generate_daydata(daydata, date_array):
   for i, d in enumerate(daydata):
     if i != 0:
       out += ","
-    out += f"[\"{date_array[i]}\",{d[0]},{d[1]},{d[2]},{int(d[3])},{d[4]},{int(d[5])}]"
+    out += f"[\"{date_array[i]}\",{d[0]},{d[1]},{d[2]},{int(d[3])},{d[4]},{d[5]}]"
   return out + "]"
 
 def _write_daydata(meshoutdir, mesh, daydata, date_array):
